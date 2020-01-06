@@ -2,6 +2,7 @@ const express = require('express'); //Fast, unopinionated, minimalist web framew
 const dotenv = require('dotenv'); //loads environment variables from a .env file into process.env
 const morgan = require('morgan'); //HTTP request logger middleware for node.js
 const connectDB = require('./config/db');
+const exphbs  = require('express-handlebars');
 
 // Load env variables
 dotenv.config({ path: './config/config.env' });
@@ -14,6 +15,13 @@ const openings = require('./routes/openings');
 
 // Create an express application
 const app = express();
+
+// Include static files
+app.use(express.static(__dirname + '/public'));
+
+// Register a Handlebars view engine
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars');
 
 // Dev logging middleware
 if (process.env.NODE_ENV === 'development') {

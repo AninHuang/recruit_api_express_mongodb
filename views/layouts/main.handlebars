@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>PandO 招募</title>
+    {{!-- {{#each css}}
+        <link rel="stylesheet" href="/css/{{this}}">
+    {{/each}} --}}
+    <link rel="stylesheet" href="/css/tailwind.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div id="pwc-context-section">
+        <!--職位敘述-->
+        <div class="pwc-cards-description flex flex-wrap justify-between items-center my-4">
+            <div class="pwc-headline">最新職位</div>
+            <div id="LastDateTime" style="font-size:0.95rem;"></div>
+        </div>
+        <!--多則職缺資訊-->
+        <div id="data-container" class="pwc-cards-block" style="display:flex; flex-wrap:wrap;">
+            {{{body}}}
+        </div>
+    </div>
+</body>
+</html>

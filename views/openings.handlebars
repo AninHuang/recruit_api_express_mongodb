@@ -1,0 +1,12 @@
+{{#each openings}}
+  <a href="#" data-id="{{this.ID}}" class="pwc-card" onclick="handleCard(this.dataset.id)">
+    <div class="pwc-card_position">{{this.Title}}</div>
+    {{!-- {{#if (this.Mark !== "empty")}}
+      <span class="pwc-flag">{{this.Mark}}</span>
+    {{/if}} --}}
+    <section>
+      <div class="pwc-card_intro">{{this.LocationName}}</div>
+      <div class="pwc-card_intro">{{this.Industry}}</div>
+    </section>
+  </a>
+{{/each}}

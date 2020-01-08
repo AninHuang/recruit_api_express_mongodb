@@ -1,0 +1,31 @@
+<div id="opening-container">
+      <section class="pwc-opening flex flex-wrap items-center my-5">
+        <span id="JobTitle" class="pwc-opening_title flex items-start font-bold">{{opening.Title}}
+            {{#if opening.Mark}}
+                <span class="pwc-flag">{{opening.Mark}}</span>
+            {{/if}}
+        </span>
+        <section class="w-full pwc-opening_info mb-4 flex flex-wrap items-center">
+            <div id="pwc-opening_area">工作地點：{{opening.LocationName}}</div>
+            <div id="pwc-opening_industry">產業：{{opening.Industry}}</div>
+            <div id="pwc-opening_code">職缺代碼：{{opening.Code}}</div>
+        </section>
+        <section class="w-full pwc-opening_content">
+            <div class="flex flex-wrap items-center">
+                <div class="pwc-opening_requirements mr-4">Requirements</div>
+                <a href="mailto:anita.p.chen@tw.pwc.com?cc=angela.a.chang@tw.pwc.com ,angel.chou@tw.pwc.com ,karen.yh.chen@tw.pwc.com,jessie.c.ho@tw.pwc.com,jenny.l.lu@tw.pwc.com ,wendy.cheng@tw.pwc.com,fanny.lin@tw.pwc.com&amp;subject=欲應徵 [APCH-1912-0049] 採購主管" id="btn-apply">應徵此職位</a>
+                <a href="#" id="btn-backToLast" onclick="backToLast();">返回前頁</a>
+            </div>
+            <hr>
+            <p>職務說明</p>
+            <br>
+            <div id="JobRequirements">
+                {{#if opening.Requirement}}
+                    <div class="">
+                        <p>{{opening.Requirement}}</p>
+                    </div>
+                {{/if}}
+            </div>
+        </section>
+    </section>
+  </div>

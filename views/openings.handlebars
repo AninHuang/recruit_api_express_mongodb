@@ -1,9 +1,9 @@
 {{#each openings}}
-  <a href="#" data-id="{{this.ID}}" class="pwc-card" onclick="handleCard(this.dataset.id)">
+  <a href="javascript:;" data-id="{{this.ID}}" class="pwc-card" onclick="handleCard({{this.ID}})">
     <div class="pwc-card_position">{{this.Title}}</div>
-    {{!-- {{#if (this.Mark !== "empty")}}
+    {{#if this.Mark}}
       <span class="pwc-flag">{{this.Mark}}</span>
-    {{/if}} --}}
+    {{/if}}
     <section>
       <div class="pwc-card_intro">{{this.LocationName}}</div>
       <div class="pwc-card_intro">{{this.Industry}}</div>

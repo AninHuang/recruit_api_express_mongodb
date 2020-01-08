@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const OpeningSchema = new mongoose.Schema({
-    ID: String,
+    ID: { type: String, unique: true },
     Title: String,
     Code: String,
     Industry: String,
@@ -10,7 +10,10 @@ const OpeningSchema = new mongoose.Schema({
     LocationID: String,
     LocationName: String,
     OwnerEmail: String,
-    Created: String,
+    Created: {
+        type: Date,
+        default: Date.now
+    },
     Mark: String,
     Requirement: String,
     MailList: String

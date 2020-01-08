@@ -16,6 +16,9 @@ const openings = require('./routes/openings');
 // Create an express application
 const app = express();
 
+// Body parser
+app.use(express.json());
+
 // Include static files
 app.use(express.static(__dirname + '/public'));
 

@@ -58,21 +58,36 @@ exports.createOpening = async (req, res, next) => {
 // @route      PUT /api/v1/openings/:id
 // @access     Private 
 exports.updateOpening = async (req, res, next) => {
-    const opening = await Opening.findOneAndUpdate({ ID: req.params.id }, req.body, {
-        new: true,
-        runValidators: true //執行 Validation 驗證
-    });
-
-    if (!opening) {
-        return res.status(400).json({ success: false });
+    try {
+        const opening = await Opening.findOneAndUpdate({ ID: req.params.id }, req.body, {
+            new: true,
+            runValidators: true //執行 Validation 驗證
+        });
+    
+        if (!opening) {
+            return res.status(400).json({ success: false });
+        }
+    
+        res.status(200).json({ success: true, data: opening });
+    } catch (error) {
+        res.status(400).json({ success: false });
     }
-
-    res.status(200).json({ success: true, data: opening });
 }
 
 // @desc       Delete opening
 // @route      DELETE /api/v1/openings/:id
 // @access     Private 
-exports.deleteOpening = (req, res, next) => {
-    res.status(200).json({ success: true, msg: `Delete opening ${req.params.id}` });
+exports.deleteOpening = async (req, res, next) => {
+    //res.status(200).json({ success: true, msg: `Delete opening ${req.params.id}` });
+    try {
+        const opening = await Opening.findOneAndDelete({ ID: req.params.id });
+    
+        if (!opening) {
+            return res.status(400).json({ success: false });
+        }
+    
+        res.status(200).json({ success: true, data: {} });
+    } catch (error) {
+        res.status(400).json({ success: false });
+    }
 }

@@ -16,7 +16,7 @@ exports.getOpenings = async (req, res, next) => {
            openings: openings // 回傳給 View 的 Response 裡面，套板用
         });
     } catch (error) {
-        res.status(400).json({ success: false });
+        next(error);
     }
 }
 
@@ -42,9 +42,7 @@ exports.getOpening = async (req, res, next) => {
         });
     } catch (error) {
         //res.status(400).json({ success: false });
-        next(
-            new ErrorResponse(`Opening not found with id of ${req.params.id}`, 404)
-        );
+        next(error);
     }
 }
 
@@ -57,7 +55,7 @@ exports.createOpening = async (req, res, next) => {
 
         res.status(201).json({ success: true, data: newOpening });
     } catch (error) {
-        res.status(400).json({ success: false });
+        next(error);
     }
 }
 
@@ -72,12 +70,14 @@ exports.updateOpening = async (req, res, next) => {
         });
     
         if (!opening) {
-            return res.status(400).json({ success: false });
+            return next(
+                new ErrorResponse(`Opening not found with id of ${req.params.id}`, 404)
+            );
         }
     
         res.status(200).json({ success: true, data: opening });
     } catch (error) {
-        res.status(400).json({ success: false });
+        next(error);
     }
 }
 
@@ -90,11 +90,13 @@ exports.deleteOpening = async (req, res, next) => {
         const opening = await Opening.findOneAndDelete({ ID: req.params.id });
     
         if (!opening) {
-            return res.status(400).json({ success: false });
+            return next(
+                new ErrorResponse(`Opening not found with id of ${req.params.id}`, 404)
+            );
         }
     
         res.status(200).json({ success: true, data: {} });
     } catch (error) {
-        res.status(400).json({ success: false });
+        next(error);
     }
 }

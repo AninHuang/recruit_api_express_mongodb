@@ -1,3 +1,4 @@
+const ErrorResponse = require('../utils/errorResponse');
 const Opening = require('../models/Opening');
 
 // Middleware function
@@ -15,8 +16,7 @@ exports.getOpenings = async (req, res, next) => {
            openings: openings // 回傳給 View 的 Response 裡面，套板用
         });
     } catch (error) {
-        //res.status(400).json({ success: false });
-        next(error);
+        res.status(400).json({ success: false });
     }
 }
 
@@ -30,7 +30,10 @@ exports.getOpening = async (req, res, next) => {
         const opening = await Opening.findOne({ ID: req.params.id });
         
         if (!opening) {
-            return res.status(400).json({ success: false });
+            //return res.status(400).json({ success: false });
+            return next(
+                new ErrorResponse(`Opening not found with id of ${req.params.id}`, 404)
+            );
         }
 
         //res.status(200).json({ success: true, data: opening });
@@ -39,7 +42,9 @@ exports.getOpening = async (req, res, next) => {
         });
     } catch (error) {
         //res.status(400).json({ success: false });
-        next(error);
+        next(
+            new ErrorResponse(`Opening not found with id of ${req.params.id}`, 404)
+        );
     }
 }
 

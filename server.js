@@ -1,6 +1,7 @@
 const express = require('express'); //Fast, unopinionated, minimalist web framework for node.
 const dotenv = require('dotenv'); //loads environment variables from a .env file into process.env
 const morgan = require('morgan'); //HTTP request logger middleware for node.js
+const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 const exphbs  = require('express-handlebars');
 
@@ -33,6 +34,8 @@ if (process.env.NODE_ENV === 'development') {
 
 // Mount routers
 app.use('/api/v1/openings', openings);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

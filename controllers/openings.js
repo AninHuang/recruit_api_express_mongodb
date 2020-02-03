@@ -15,7 +15,8 @@ exports.getOpenings = async (req, res, next) => {
            openings: openings // 回傳給 View 的 Response 裡面，套板用
         });
     } catch (error) {
-        res.status(400).json({ success: false });
+        //res.status(400).json({ success: false });
+        next(error);
     }
 }
 
@@ -37,7 +38,8 @@ exports.getOpening = async (req, res, next) => {
             opening: opening
         });
     } catch (error) {
-        res.status(400).json({ success: false });
+        //res.status(400).json({ success: false });
+        next(error);
     }
 }
 

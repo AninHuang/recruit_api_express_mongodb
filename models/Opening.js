@@ -1,15 +1,59 @@
 const mongoose = require('mongoose');
+const geocoder = require('../utils/geocoder');
 
 const OpeningSchema = new mongoose.Schema({
     ID: { type: String, unique: true },
-    Title: String,
+    Title: {
+        type: String,
+        required: [true, '請輸入職缺標題'],
+        trim: true,
+        maxlength: [50, '不能大於 50 字元']
+    },
     Code: String,
-    Industry: String,
+    Industry: {
+        type: String,
+        enum: [
+            '飯店業',
+            '工程顧問業',
+            '運動器材製造業',
+            '製造業上市控股集團',
+            '製造業',
+            '零售',
+            '科技業'
+        ]
+    },
     FunctionID: String,
     FunctionName: String,
+    Address: {
+        type: String,
+        required: [true, '請輸入公司地址']
+    },
+    Location: {
+        // GeoJSON Point
+        type: {
+            type: String,
+            enum: ['Point']
+        },
+        coordinates: {
+            type: [Number],
+            index: '2dsphere'
+        },
+        formattedAddress: String,
+        street: String,
+        city: String,
+        state: String,
+        zipcode: String,
+        country: String
+    },
     LocationID: String,
     LocationName: String,
-    OwnerEmail: String,
+    OwnerEmail: {
+        type: String,
+        match: [
+          /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+          '請輸入合法電子信箱'
+        ]
+    },
     Created: {
         type: Date,
         default: Date.now
@@ -18,6 +62,32 @@ const OpeningSchema = new mongoose.Schema({
     Requirement: String,
     MailList: String
 }, { collection : 'opening' });
+
+/**
+ * Schema.pre('save', callback[next])
+ **/
+// 存至 db 前
+OpeningSchema.pre('save', async function(next) {
+    const loc = await geocoder.geocode(this.Address);
+
+    console.log(loc);
+
+    this.Location = {
+      type: 'Point',
+      coordinates: [loc[0].longitude, loc[0].latitude],
+      formattedAddress: loc[0].formattedAddress,
+      street: loc[0].streetName,
+      city: loc[0].city,
+      state: loc[0].stateCode,
+      zipcode: loc[0].zipcode,
+      country: loc[0].countryCode
+    };
+
+    // 地址在 query 時用不到的話，可設 undefined，不用存進 db
+    this.Address = undefined;
+    
+    next();
+  });
 
 const Opening = mongoose.model('Opening', OpeningSchema);
 

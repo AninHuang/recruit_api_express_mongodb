@@ -1,6 +1,8 @@
 const express = require('express');
-const { getOpenings, getOpening, createOpening, updateOpening, deleteOpening } = require('../controllers/openings');
+const { getOpenings, getOpening, createOpening, updateOpening, deleteOpening, getOpeningsInRadius } = require('../controllers/openings');
 const router = express.Router();
+
+router.route('/radius/:zipcode/:distance').get(getOpeningsInRadius);
 
 router.route('/').get(getOpenings).post(createOpening);
 

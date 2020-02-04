@@ -1,9 +1,9 @@
 const ErrorResponse = require('../utils/errorResponse');
 const geocoder = require('../utils/geocoder');
 const Opening = require('../models/Opening');
-
+ 
 // Middleware function
-
+ 
 // @desc       Get all openings
 // @route      GET /api/v1/openings
 // @access     Public 
@@ -20,7 +20,7 @@ exports.getOpenings = async (req, res, next) => {
         next(error);
     }
 }
-
+ 
 // @desc       Get single opening
 // @route      GET /api/v1/openings/:id
 // @access     Public 
@@ -36,7 +36,7 @@ exports.getOpening = async (req, res, next) => {
                 new ErrorResponse(`Opening not found with id of ${req.params.id}`, 404)
             );
         }
-
+ 
         //res.status(200).json({ success: true, data: opening });
         res.status(200).render('content', {
             opening: opening
@@ -46,20 +46,20 @@ exports.getOpening = async (req, res, next) => {
         next(error);
     }
 }
-
+ 
 // @desc       Create new opening
 // @route      POST /api/v1/openings
 // @access     Private 
 exports.createOpening = async (req, res, next) => {
     try {
         const newOpening = await Opening.create(req.body);
-
+ 
         res.status(201).json({ success: true, data: newOpening });
     } catch (error) {
         next(error);
     }
 }
-
+ 
 // @desc       Update opening
 // @route      PUT /api/v1/openings/:id
 // @access     Private 
@@ -81,7 +81,7 @@ exports.updateOpening = async (req, res, next) => {
         next(error);
     }
 }
-
+ 
 // @desc       Delete opening
 // @route      DELETE /api/v1/openings/:id
 // @access     Private 
@@ -101,25 +101,29 @@ exports.deleteOpening = async (req, res, next) => {
         next(error);
     }
 }
-
+ 
 // @desc      Get openings within a radius
-// @route     GET /api/v1/openings/radius/:zipcode/:distance
+// @route     GET /api/v1/openings/radius/:country/:zipcode/:distance
 // @access    Private
 exports.getOpeningsInRadius = async (req, res, next) => {
-    const { zipcode, distance } = req.params;
+    const { country, zipcode, distance } = req.params;
   
+    console.log(country, zipcode, distance);
+ 
     // Get lat/lng from geocoder
-    const loc = await geocoder.geocode(zipcode);
+    const loc = await geocoder.geocode({ countryCode: country, zipcode: zipcode });
     const lat = loc[0].latitude;
     const lng = loc[0].longitude;
   
-    // Calc radius using radians
-    // Divide dist by radius of Earth
-    // Earth Radius = 3,963 mi / 6,378 km
-    const radius = distance / 3963;
+    console.log(loc);
+ 
+    // 使用弧度計算半徑
+    // 將距離除以地球半徑
+    const radius = distance / 3963.2;
   
     const openings = await Opening.find({
-      location: { $geoWithin: { $centerSphere: [[lng, lat], radius] } }
+      // 使用球面幾何的地理空間查詢定義的圓。回傳圓圈範圍內的 document
+      Location: { $geoWithin: { $centerSphere: [[lng, lat], radius] } }
     });
   
     res.status(200).json({

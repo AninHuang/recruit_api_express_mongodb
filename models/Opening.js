@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const geocoder = require('../utils/geocoder');
-
+ 
 const OpeningSchema = new mongoose.Schema({
     ID: { type: String, unique: true },
     Title: {
@@ -36,14 +36,29 @@ const OpeningSchema = new mongoose.Schema({
         },
         coordinates: {
             type: [Number],
-            index: '2dsphere'
+            index: '2dsphere' // 2dsphere 索引用來查詢球面幾何上的數據
         },
         formattedAddress: String,
-        street: String,
-        city: String,
-        state: String,
-        zipcode: String,
-        country: String
+        street: {
+            type: String,
+            trim: true
+        },
+        city: {
+            type: String,
+            trim: true
+        },
+        state: {
+            type: String,
+            trim: true
+        },
+        zipcode: {
+            type: String,
+            trim: true
+        },
+        country: {
+            type: String,
+            trim: true
+        }
     },
     LocationID: String,
     LocationName: String,
@@ -62,16 +77,17 @@ const OpeningSchema = new mongoose.Schema({
     Requirement: String,
     MailList: String
 }, { collection : 'opening' });
-
+ 
 /**
  * Schema.pre('save', callback[next])
  **/
 // 存至 db 前
 OpeningSchema.pre('save', async function(next) {
+    // this 為 document 本身
     const loc = await geocoder.geocode(this.Address);
-
+ 
     console.log(loc);
-
+ 
     this.Location = {
       type: 'Point',
       coordinates: [loc[0].longitude, loc[0].latitude],
@@ -82,13 +98,13 @@ OpeningSchema.pre('save', async function(next) {
       zipcode: loc[0].zipcode,
       country: loc[0].countryCode
     };
-
+ 
     // 地址在 query 時用不到的話，可設 undefined，不用存進 db
     this.Address = undefined;
     
     next();
   });
-
+ 
 const Opening = mongoose.model('Opening', OpeningSchema);
-
+ 
 module.exports = Opening;

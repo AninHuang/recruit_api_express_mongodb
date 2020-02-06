@@ -75,7 +75,18 @@ const OpeningSchema = new mongoose.Schema({
     },
     Mark: String,
     Requirement: String,
-    MailList: String
+    MailList: String,
+    StartingSalary: {
+        type: Number,
+        validate: {
+          // (待測試)
+          // Add a custom validator
+          validator: function (v) {
+            return Number.isInteger(v);
+          },
+          message: props => `${props.value} 不是正整數`
+        }
+    }
 }, { collection : 'opening' });
  
 /**

@@ -10,7 +10,13 @@ const Opening = require('../models/Opening');
 exports.getOpenings = async (req, res, next) => {
     //res.status(200).json({ success: true, msg: 'Show all openings' });
     try {
-        const openings = await Opening.find();
+        let query;
+        let queryStr = JSON.stringify(req.query);
+
+        queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+        query = Opening.find(JSON.parse(queryStr));
+
+        const openings = await query;
         
         //res.status(200).json({ success: true, data: openings });
         res.status(200).render('openings', {

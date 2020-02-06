@@ -13,7 +13,8 @@
     "Created": "2/1/2020 01:14:31",
     "Mark": "empty",
     "Requirement": null,
-    "MailList": null
+    "MailList": null,
+    "StartingSalary": 35000
   },
   {
     "ID": "468",
@@ -29,7 +30,8 @@
     "Created": "2/1/2020 01:12:52",
     "Mark": "empty",
     "Requirement": null,
-    "MailList": null
+    "MailList": null,
+    "StartingSalary": 37000
   },
   {
     "ID": "467",
@@ -45,7 +47,8 @@
     "Created": "1/31/2020 23:23:59",
     "Mark": "empty",
     "Requirement": null,
-    "MailList": null
+    "MailList": null,
+    "StartingSalary": 45000
   },
   {
     "ID": "466",
@@ -61,7 +64,8 @@
     "Created": "1/18/2020 00:12:46",
     "Mark": "New",
     "Requirement": null,
-    "MailList": null
+    "MailList": null,
+    "StartingSalary": 42000
   },
   {
     "ID": "465",
@@ -77,7 +81,8 @@
     "Created": "1/16/2020 19:52:01",
     "Mark": "New",
     "Requirement": null,
-    "MailList": null
+    "MailList": null,
+    "StartingSalary": 46000
   },
   {
     "ID": "464",
@@ -93,7 +98,8 @@
     "Created": "1/1/2020 00:08:28",
     "Mark": "New",
     "Requirement": null,
-    "MailList": null
+    "MailList": null,
+    "StartingSalary": 55000
   },
   {
     "ID": "463",
@@ -125,7 +131,8 @@
     "Created": "1/1/2020 00:04:08",
     "Mark": "New",
     "Requirement": null,
-    "MailList": null
+    "MailList": null,
+    "StartingSalary": 68000
   },
   {
     "ID": "461",
@@ -189,7 +196,8 @@
     "Created": "12/30/2019 19:43:35",
     "Mark": "New",
     "Requirement": null,
-    "MailList": null
+    "MailList": null,
+    "StartingSalary": 65000
   },
   {
     "ID": "457",
@@ -221,7 +229,8 @@
     "Created": "12/28/2019 02:16:25",
     "Mark": "empty",
     "Requirement": null,
-    "MailList": null
+    "MailList": null,
+    "StartingSalary": 85000
   },
   {
     "ID": "455",

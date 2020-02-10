@@ -10,12 +10,62 @@ const Opening = require('../models/Opening');
 exports.getOpenings = async (req, res, next) => {
     //res.status(200).json({ success: true, msg: 'Show all openings' });
     try {
+        // 假設模擬 /api/v1/openings?StartingSalary[lte]=30000&select=Title,LocationName&sort=-Industry
+        
         let query;
-        let queryStr = JSON.stringify(req.query);
 
+        // Object Spread
+        // { ...obj } is similar to Object.assign()
+        // Copy req.query
+        const reqQuery = { ...req.query };
+
+        // 先排除撈全部資料
+        // Fields to exclude
+        const removeFields = ['select', 'sort'];
+
+        // Loop over removeFields and delete them from reqQuery
+        removeFields.forEach(field => delete reqQuery[field]);
+
+        let queryStr = JSON.stringify(reqQuery);
+
+        // Handling req.query { StartingSalary: { lte: '30000' } }
+        // Make it like $gt, $gte, etc => Add money($) sign => { StartingSalary: { $lte: '30000' } }
         queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+        
         query = Opening.find(JSON.parse(queryStr));
 
+        // If including select, then handle it
+        if (req.query.select) { // Title,LocationName
+            const fields = req.query.select.split(',').join(' ');
+
+            /**
+             * Mongoose
+             * 
+             * selecting the `name` and `occupation` fields
+             * query.select('name occupation');
+             */
+            query = query.select(fields);
+        }
+
+        // If including sort, then handle it
+        if (req.query.sort) {
+            const sortBy = req.query.sort.split(',').join(' ');
+
+            /**
+             * Mongoose
+             * 
+             * sort by "field" ascending and "test" descending
+             * query.sort({ field: 'asc', test: -1 });
+             * 
+             * equivalent
+             * query.sort('field -test');
+             */
+            query = query.sort(sortBy);
+        } else {
+            query = query.sort('-Created'); // Descending
+        }
+
+        // Exercuting query
         const openings = await query;
         
         //res.status(200).json({ success: true, data: openings });

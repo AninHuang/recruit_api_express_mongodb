@@ -10,7 +10,7 @@ const Opening = require('../models/Opening');
 exports.getOpenings = async (req, res, next) => {
     //res.status(200).json({ success: true, msg: 'Show all openings' });
     try {
-        // 假設模擬 /api/v1/openings?StartingSalary[lte]=30000&select=Title,LocationName&sort=-Industry
+        // 假設模擬 /api/v1/openings?StartingSalary[lte]=30000&select=Title,LocationName&sort=-Industry&limit=2
         
         let query;
 
@@ -19,9 +19,10 @@ exports.getOpenings = async (req, res, next) => {
         // Copy req.query
         const reqQuery = { ...req.query };
 
-        // 先排除撈全部資料
+        // 先排除以下關鍵字，撈全部資料
+        // 不然以下關鍵字會當成 DB Document 的 Field 被尋找 
         // Fields to exclude
-        const removeFields = ['select', 'sort'];
+        const removeFields = ['select', 'sort', 'page', 'limit'];
 
         // Loop over removeFields and delete them from reqQuery
         removeFields.forEach(field => delete reqQuery[field]);
@@ -40,6 +41,7 @@ exports.getOpenings = async (req, res, next) => {
 
             /**
              * Mongoose
+             * Query.prototype.select()
              * 
              * selecting the `name` and `occupation` fields
              * query.select('name occupation');
@@ -53,6 +55,7 @@ exports.getOpenings = async (req, res, next) => {
 
             /**
              * Mongoose
+             * Query.prototype.sort()
              * 
              * sort by "field" ascending and "test" descending
              * query.sort({ field: 'asc', test: -1 });
@@ -65,12 +68,45 @@ exports.getOpenings = async (req, res, next) => {
             query = query.sort('-Created'); // Descending
         }
 
+        // Pagination
+        const page = parseInt(req.query.page, 10) || 1; // Page 1 is default
+        const limit = parseInt(req.query.limit, 10) || 10;
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const total = await Opening.countDocuments();
+
+        /**
+         * Mongoose
+         * Query.prototype.skip()
+         * 
+         * Specifies the number of documents to skip.
+         */
+        query = query.skip(startIndex).limit(limit);
+
         // Exercuting query
         const openings = await query;
+
+        // Create pagination
+        const pagination = {};
+
+        if (endIndex < total) {
+            pagination.next = {
+                page: page + 1,
+                limit
+            }
+        }
+
+        if (startIndex > 0) {
+            pagination.prev = {
+                page: page - 1,
+                limit
+            }
+        }
         
         //res.status(200).json({ success: true, data: openings });
         res.status(200).render('openings', {
-           openings: openings // 回傳給 View 的 Response 裡面，套板用
+           openings, // 回傳給 View 的 Response 裡面，套板用
+           pagination
         });
     } catch (error) {
         next(error);
